@@ -10,6 +10,12 @@ double f(double a){
 	return (1.0/stdDev*sqrt(M_PI*2))*exp(-0.5*(a-mean)*(a-mean)/(stdDev*stdDev));
 }
 
+double g(double a){
+	double slope = -0.003;
+	double lbd = -1.0/slope;
+	return (lbd*exp(-slope*a));
+}
+
 void gauss(){
 
 	TH1F *hist =new TH1F("hist", "Guassian", 100, 1820, 1920);
@@ -17,6 +23,7 @@ void gauss(){
 	double a, b;
 	int i=0;
 	int entries = 10000;
+	
 	while(i<entries){
 
 		a  = 1820+100*randomGenerator.Rndm();
@@ -27,8 +34,30 @@ void gauss(){
 			i++;
 		}
 	}
+	i=0;
+	
+	entries=10000;
+	//CHECAR ESSE CODIGO COM A CARLA
+	
+	while(i<entries){
+	
+		a = randomGenerator.Rndm();
+		b = randomGenerator.Rndm();
+		
+		if((g(a)/g(0))>b){
+			hist->Fill(1820+100*a);
+			i++;	
+		}
+	}
 
-	TCanvas *c1 = new TCanvas();
-	hist->Draw();
+
+	TF1 *fit = new TF1("fit", "gaus", 1820, 1920);
+	fit->SetParameter(0,100);
+	fit->SetParameter(1,1869);
+	fit->SetParameter(2,10);
+    	TCanvas *canvas = new TCanvas("", "Ex", 800, 600);
+    	hist->Draw();
+	hist->Fit("fit", "fit");
+    	canvas->Draw();
 }
 
