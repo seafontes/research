@@ -12,8 +12,7 @@ double f(double a){
 
 double g(double a){
 	double slope = -0.003;
-	double lbd = -1.0/slope;
-	return (lbd*exp(-slope*a));
+	return (exp(slope*a));
 }
 
 void gauss(){
