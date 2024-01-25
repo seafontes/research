@@ -28,9 +28,9 @@ void mass::Loop()
 	double mmae, e2, dotprod, m1, m2, m3;
 	
 	//------------------ALTERAR AQUI PARA MUDAR A MASSA
-	m1=massK;
+	m1=massPi;
 	m2=massK;
-	m3=massK;
+	m3=massPi;
 	
    if (fChain == 0) return;
 
@@ -55,7 +55,12 @@ void mass::Loop()
    
    
    }
+   
+   TF1 *fit = new TF1("fit", "gaus", 0, 4000);
+   fit->SetParameter(1, 1869);
    massmae->Draw();
+   massmae->Fit("fit", "fit");
+   cv1->Draw();
 }
 
 
