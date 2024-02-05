@@ -12,7 +12,7 @@ double f(double a){
 
 double g(double a){
 	double slope = -0.003;
-	return (exp(slope*a));
+	return exp(slope*a);
 }
 
 void gauss(){
@@ -40,11 +40,11 @@ void gauss(){
 	
 	while(i<entries){
 	
-		a = randomGenerator.Rndm();
+		a = 1820+100*randomGenerator.Rndm();
 		b = randomGenerator.Rndm();
 		
-		if((g(a)/g(0))>b){
-			hist->Fill(1820+100*a);
+		if((g(a)/g(1820))>b){
+			hist->Fill(a);
 			i++;	
 		}
 	}

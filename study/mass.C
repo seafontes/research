@@ -5,6 +5,7 @@
 #include <TCanvas.h>
 #include <TF1.h>
 #include <stdio.h>
+#include <TTree.h>
 
 const double massK = 493.667;
 const double massPi = 105.65836;
@@ -22,10 +23,27 @@ void mass::Loop()
 //      root> t.Show(16);     // Read and show values of entry 16
 //      root> t.Loop();       // Loop on all entries
 //
-
-	TCanvas *cv1 = new TCanvas();
-	TH1F *massmae = new TH1F("TESTE", "teste", 300, 0, 4000);
-	double mmae, e2, dotprod, m1, m2, m3;
+	TFile *file = new TFile("known3body.root", "RECREATE");
+	TTree *tree = new TTree("histTree", "histogramas das combinacoes possiveis");
+	
+	TH1F *KKK = new TH1F("KKK","histKKK",  300, 0, 4000);
+	TH1F *KKP = new TH1F("KKP","histKKP",  300, 0, 4000);
+	TH1F *KPK = new TH1F("KPK","histKPK",  300, 0, 4000);
+	TH1F *KPP = new TH1F("KPP","hsitKPP",  300, 0, 4000);
+	TH1F *PKK = new TH1F("PKK","histPKK",  300, 0, 4000);
+	TH1F *PKP = new TH1F("PKP","histPKP",  300, 0, 4000);
+	TH1F *PPK = new TH1F("PPK","histPPK",  300, 0, 4000);
+	TH1F *PPP = new TH1F("PPK","histPPP",  300, 0, 4000);
+	tree->Branch("KKK", "TH1F", KKK);
+	tree->Branch("KKP", "TH1F", KKP);
+	tree->Branch("KPK", "TH1F", KPK);
+	tree->Branch("KPP", "TH1F", KPP);
+	tree->Branch("PKK", "TH1F", PKK);
+	tree->Branch("PKP", "TH1F", PKP);
+	tree->Branch("PPK", "TH1F", PPK);
+	tree->Branch("PPP", "TH1F", PPP);
+	
+	double mmae, p1sq, p2sq, p3sq, ptsq, m1, m2, m3, emae;
 	
 	//------------------ALTERAR AQUI PARA MUDAR A MASSA
 	m1=massPi;
@@ -45,37 +63,80 @@ void mass::Loop()
       
    
    
-      //--------------------A PARTIR DAQUI COMECAM OS CALCULOS 
+//--------------------A PARTIR DAQUI COMECAM OS CALCULOS 
+//---------------CALCULOS GERAIS
  	mmae =0;
- 	dotprod=2*(0                                                                                   +sqrt((m1*m1+p1_PX*p1_PX+p1_PY*p1_PY+p1_PZ*p1_PZ)*(m2*m2+p2_PX*p2_PX+p2_PY*p2_PY+p2_PZ*p2_PZ)) +sqrt((m3*m3+p3_PX*p3_PX+p1_PY*p3_PY+p3_PZ*p3_PZ)*(m2*m2+p2_PX*p2_PX+p2_PY*p2_PY+p2_PZ*p2_PZ))+sqrt((m1*m1+p1_PX*p1_PX+p1_PY*p1_PY+p1_PZ*p1_PZ)*(m3*m3+p3_PX*p3_PX+p3_PY*p3_PY+p3_PZ*p3_PZ))                                                                                                            -((p1_PX*p2_PX+p1_PY*p2_PY+p1_PZ*p2_PZ)+(p1_PX*p3_PX+p1_PY*p3_PY+p1_PZ*p3_PZ)+(p3_PX*p2_PX+p3_PY*p2_PY+p3_PZ*p2_PZ))); // 4-MOMENTO CRUZADO
- 	mmae = sqrt(m1*m1+m2*m2+m3*m3+dotprod);
+ 	p1sq = p1_PX*p1_PX + p1_PY*p1_PY + p1_PZ*p1_PZ;
+ 	p2sq = p2_PX*p2_PX + p2_PY*p2_PY + p2_PZ*p2_PZ;
+ 	p3sq = p3_PX*p3_PX + p3_PY*p3_PY + p3_PZ*p3_PZ;
+ 	ptsq = (p1_PX+p2_PX+p3_PX)*(p1_PX+p2_PX+p3_PX) + (p1_PY+p2_PY+p3_PY)*(p1_PY+p2_PY+p3_PY) + (p1_PZ+p2_PZ+p3_PZ)*(p1_PZ+p2_PZ+p3_PZ);
  	
- 	
- 	massmae->Fill(mmae);
+//---------------CALCULOS ESPECIFICOS
+//-------KKK--------
+
+	m1 = massK;	m2 = massK;	m3 = massK;
+	emae = sqrt(m1*m1+p1sq)+sqrt(m2*m2+p2sq)+sqrt(m3*m3+p3sq);
+	mmae = sqrt(emae*emae-ptsq);
+	KKK->Fill(mmae);
+	
+//-------KKP--------
+
+	m1 = massK;	m2 = massK;	m3 = massPi;
+	emae = sqrt(m1*m1+p1sq)+sqrt(m2*m2+p2sq)+sqrt(m3*m3+p3sq);
+	mmae = sqrt(emae*emae-ptsq);
+	KKP->Fill(mmae);
+
+//-------KPK--------
+
+	m1 = massK;	m2 = massPi;	m3 = massK;
+	emae = sqrt(m1*m1+p1sq)+sqrt(m2*m2+p2sq)+sqrt(m3*m3+p3sq);
+	mmae = sqrt(emae*emae-ptsq);
+	KPK->Fill(mmae);
+
+//-------KPP--------
+
+	m1 = massK;	m2 = massPi;	m3 = massPi;
+	emae = sqrt(m1*m1+p1sq)+sqrt(m2*m2+p2sq)+sqrt(m3*m3+p3sq);
+	mmae = sqrt(emae*emae-ptsq);
+	KPP->Fill(mmae);
+
+//-------PKK---------
+
+	m1 = massPi;	m2 = massK;	m3 = massK;
+	emae = sqrt(m1*m1+p1sq)+sqrt(m2*m2+p2sq)+sqrt(m3*m3+p3sq);
+	mmae = sqrt(emae*emae-ptsq);
+	PKK->Fill(mmae);
+
+//-------PKP---------
+
+	m1 = massPi;	m2 = massK;	m3 = massPi;
+	emae = sqrt(m1*m1+p1sq)+sqrt(m2*m2+p2sq)+sqrt(m3*m3+p3sq);
+	mmae = sqrt(emae*emae-ptsq);
+	PKP->Fill(mmae);
+
+//-------PPK---------
+
+	m1 = massPi;	m2 = massPi;	m3 = massK;
+	emae = sqrt(m1*m1+p1sq)+sqrt(m2*m2+p2sq)+sqrt(m3*m3+p3sq);
+	mmae = sqrt(emae*emae-ptsq);
+	PPK->Fill(mmae);
+
+//-------PPP---------
+
+	m1 = massPi;	m2 = massPi;	m3 = massPi;
+	emae = sqrt(m1*m1+p1sq)+sqrt(m2*m2+p2sq)+sqrt(m3*m3+p3sq);
+	mmae = sqrt(emae*emae-ptsq);
+	PPP->Fill(mmae);
+	
+//--------FIM DOS CALCULOS
+
+   } //--------------FIM DO FOR DAS ENTRADAS
    
+   //---------------SALVANDO NA NOVA TREE
    
-   }
-   
-   TF1 *fit = new TF1("fit", "gaus", 0, 4000);
-   fit->SetParameter(1, 1869);
-   massmae->Draw();
-   massmae->Fit("fit", "fit");
-   cv1->Draw();
+   tree->Fill();
+   tree->Write();
+   file->Close();
+  
 }
 
-
-//     This is the loop skeleton where:
-//    jentry is the global entry number in the chain
-//    ientry is the entry number in the current Tree
-//  Note that the argument to GetEntry must be:
-//    jentry for TChain::GetEntry
-//    ientry for TTree::GetEntry and TBranch::GetEntry
-//
-//       To read only selected branches, Insert statements like:
-// METHOD1:
-//    fChain->SetBranchStatus("*",0);  // disable all branches
-//    fChain->SetBranchStatus("branchname",1);  // activate branchname
-
-// METHOD2: replace line
-//    fChain->GetEntry(jentry);       //read all branches
-//by  b_branchname->GetEntry(ientry); //read only this branch
