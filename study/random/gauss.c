@@ -3,6 +3,7 @@
 #include<TCanvas.h>
 #include<TRandom3.h>
 #include<math.h>
+#include "fitDmass.C"
 
 double f(double a){
 	double mean= 1869;
@@ -12,7 +13,8 @@ double f(double a){
 
 double g(double a){
 	double slope = -0.003;
-	return exp(slope*a);
+	double norm = slope/(exp(slope*100)-1);
+	return norm*exp(slope*(a-1820));
 }
 
 void gauss(){
@@ -21,9 +23,9 @@ void gauss(){
 	TRandom3 randomGenerator(0);
 	double a, b;
 	int i=0;
-	int entries = 10000;
+	int entriesSignal = 10000;
 	
-	while(i<entries){
+	while(i<entriesSignal){
 
 		a  = 1820+100*randomGenerator.Rndm();
 		b  = randomGenerator.Rndm();
@@ -34,11 +36,10 @@ void gauss(){
 		}
 	}
 	i=0;
-	
-	entries=10000;
 	//CHECAR ESSE CODIGO COM A CARLA
 	
-	while(i<entries){
+	int entriesBack = 10000;
+	while(i<entriesBack){
 	
 		a = 1820+100*randomGenerator.Rndm();
 		b = randomGenerator.Rndm();
@@ -50,10 +51,9 @@ void gauss(){
 	}
 
 
-	TF1 *fit = new TF1("fit", "gaus", 1820, 1920);
-	fit->SetParameter(0,100);
-	fit->SetParameter(1,1869);
-	fit->SetParameter(2,10);
+	TF1 *fit = new TF1("fit", fitDmass, 1820, 1920, 10);
+	fit->SetParNames("NSignal", "Mean Mass", "Width","bg slope","NBack");
+	fit->SetParameters(entriesSignal, 1869, 10, -0.003, entriesBack);
     	TCanvas *canvas = new TCanvas("", "Ex", 800, 600);
     	hist->Draw();
 	hist->Fit("fit", "fit");

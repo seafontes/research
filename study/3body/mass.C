@@ -26,22 +26,14 @@ void mass::Loop()
 	TFile *file = new TFile("known3body.root", "RECREATE");
 	TTree *tree = new TTree("histTree", "histogramas das combinacoes possiveis");
 	
-	TH1F *KKK = new TH1F("KKK","histKKK",  300, 0, 4000);
-	TH1F *KKP = new TH1F("KKP","histKKP",  300, 0, 4000);
-	TH1F *KPK = new TH1F("KPK","histKPK",  300, 0, 4000);
-	TH1F *KPP = new TH1F("KPP","hsitKPP",  300, 0, 4000);
-	TH1F *PKK = new TH1F("PKK","histPKK",  300, 0, 4000);
-	TH1F *PKP = new TH1F("PKP","histPKP",  300, 0, 4000);
-	TH1F *PPK = new TH1F("PPK","histPPK",  300, 0, 4000);
-	TH1F *PPP = new TH1F("PPK","histPPP",  300, 0, 4000);
-	tree->Branch("KKK", "TH1F", KKK);
-	tree->Branch("KKP", "TH1F", KKP);
-	tree->Branch("KPK", "TH1F", KPK);
-	tree->Branch("KPP", "TH1F", KPP);
-	tree->Branch("PKK", "TH1F", PKK);
-	tree->Branch("PKP", "TH1F", PKP);
-	tree->Branch("PPK", "TH1F", PPK);
-	tree->Branch("PPP", "TH1F", PPP);
+	TH1F *KKK = new TH1F("KKK","histKKK",  500, 0, 3000);
+	TH1F *KKP = new TH1F("KKP","histKKP",  500, 0, 3000);
+	TH1F *KPK = new TH1F("KPK","histKPK",  500, 0, 3000);
+	TH1F *KPP = new TH1F("KPP","hsitKPP",  500, 0, 3000);
+	TH1F *PKK = new TH1F("PKK","histPKK",  500, 0, 3000);
+	TH1F *PKP = new TH1F("PKP","histPKP",  500, 0, 3000);
+	TH1F *PPK = new TH1F("PPK","histPPK",  500, 0, 3000);
+	TH1F *PPP = new TH1F("PPP","histPPP",  500, 0, 3000);
 	
 	double mmae, p1sq, p2sq, p3sq, ptsq, m1, m2, m3, emae;
 	
@@ -135,8 +127,7 @@ void mass::Loop()
    //---------------SALVANDO NA NOVA TREE
    
    tree->Fill();
-   tree->Write();
+   file->Write();
    file->Close();
-  
-}
 
+}
