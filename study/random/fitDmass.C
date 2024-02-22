@@ -8,7 +8,7 @@ Double_t fitDmass(Double_t *v, Double_t *par)
    	4 - # de bg
    */
    
-   Double_t dx = 2.;
+   Double_t dx = 1.;
    Double_t constant = 2.5066297; // raiz de 2pi
 
    Double_t fnorm = 1./ (constant * par[2]);

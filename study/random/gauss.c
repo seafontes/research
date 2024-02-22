@@ -51,7 +51,7 @@ void gauss(){
 	}
 
 
-	TF1 *fit = new TF1("fit", fitDmass, 1820, 1920, 10);
+	TF1 *fit = new TF1("fit", fitDmass, 1820, 1920, 5);
 	fit->SetParNames("NSignal", "Mean Mass", "Width","bg slope","NBack");
 	fit->SetParameters(entriesSignal, 1869, 10, -0.003, entriesBack);
     	TCanvas *canvas = new TCanvas("", "Ex", 800, 600);
