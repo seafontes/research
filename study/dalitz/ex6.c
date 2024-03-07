@@ -24,10 +24,11 @@ double s13_bound(double m1, double m2, double m3, double m0, double s12, double 
 
 }
 
-double g(double a){
-	double mean= 2000000;
-	double stdDev = 240000;
-	return exp(-0.5*(a-mean)*(a-mean)/(stdDev*stdDev));
+double g(double a, double b){
+	double mean1= 1200000;
+	double mean2= 1400000;
+	double stdDev = 200000;
+	return exp(-0.5*((a-mean1)*(a-mean1)+(b-mean2)*(b-mean2))/(stdDev*stdDev));
 }
 
 void ex6(){
@@ -65,7 +66,7 @@ void ex6(){
 			
 			double test = randomGenerator.Rndm();
 			
-			double point = g(s12);
+			double point = g(s12, s13);
 			
 			if(point>test){
 				hist->Fill(s12,s13);
