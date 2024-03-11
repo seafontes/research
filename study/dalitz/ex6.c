@@ -24,11 +24,19 @@ double s13_bound(double m1, double m2, double m3, double m0, double s12, double 
 
 }
 
+<<<<<<< HEAD
 double breitwigner(double x, double x0, double Gamma){
 	double aux1 = (1./M_PI)*(Gamma/2.);
 	double aux2 = Gamma*Gamma/4.;
 	double bw = aux1*(1./(aux2+(x-x0)*(x-x0)));
 	return bw;
+=======
+double g(double a, double b){
+	double mean1= 1200000;
+	double mean2= 1400000;
+	double stdDev = 200000;
+	return exp(-0.5*((a-mean1)*(a-mean1)+(b-mean2)*(b-mean2))/(stdDev*stdDev));
+>>>>>>> 04cbf1e7f75457a26777c63c4835db67111c5c71
 }
 
 void ex6(){
@@ -69,7 +77,12 @@ void ex6(){
 			double GammaK = 50300;
 			//-------------------------------------------
 			double test = randomGenerator.Rndm();
+<<<<<<< HEAD
 			double point = breitwigner(s13,x0K,GammaK)/breitwigner(x0K,x0K,GammaK);
+=======
+			
+			double point = g(s12, s13);
+>>>>>>> 04cbf1e7f75457a26777c63c4835db67111c5c71
 			
 			if(point>test){
 				hist->Fill(s12,s13);
