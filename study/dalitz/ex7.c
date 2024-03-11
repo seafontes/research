@@ -3,6 +3,7 @@
 #include<TCanvas.h>
 #include<TRandom3.h>
 #include<math.h>
+#include <stdbool.h>
 
 const double massK = 493.667;
 const double massPi = 105.65836;
@@ -31,7 +32,7 @@ double breitwigner(double x, double x0, double Gamma){
 	return bw;
 }
 
-void ex6(){
+void ex7(){
 
 	TRandom3 randomGenerator(0);
 	
@@ -61,20 +62,39 @@ void ex6(){
 		
 		double boundup 	= s13_bound(m1,m2,m3,m0,s12,1.0);
 		double boundlow = s13_bound(m1,m2,m3,m0,s12,-1.0);
-		
+		bool mcs12, mcs13;
+		mcs12 = false;		
+		mcs13 = false;
+
 		if((s13>boundlow)&&(s13<boundup)){
 			
-			// --- PARAMETROS PARA BREITWIGNER DE K*(892)
-			double x0K = 891760;
-			double GammaK = 50300;
+			// --- PARAMETROS PARA BREITWIGNER DE K*(892) DE S13
+			double x0 = 891760;
+			double Gamma = 50300;
 			//-------------------------------------------
 			double test = randomGenerator.Rndm();
-			double point = breitwigner(s13,x0K,GammaK)/breitwigner(x0K,x0K,GammaK);
+			double point = breitwigner(s13,x0,Gamma)/breitwigner(x0,x0,Gamma);
+
+			if(point>test)
+				mcs13 = true;
+				
+			// --- PARAMETROS PARA BREITWIGNER PHI DE S12
+			x0 = 1019461;
+			Gamma = 4249;
+			//-------------------------------------------
+			test = randomGenerator.Rndm();
+			point = breitwigner(s12,x0,Gamma)/breitwigner(x0,x0,Gamma);
+
+			if(point>test)
+				mcs12 = true;
+				
 			
-			if(point>test){
+			
+			if(mcs12 && mcs13){
 				hist->Fill(s12,s13);
 				i++;
-				cout<< "PONTO ADICIONADO"<<endl;
+				cout<< "PONTO ADICIONADO: "<< i <<endl;
+			
 			}
 		}
 	}	

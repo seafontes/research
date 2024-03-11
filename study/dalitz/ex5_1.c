@@ -24,14 +24,13 @@ double s13_bound(double m1, double m2, double m3, double m0, double s12, double 
 
 }
 
-double breitwigner(double x, double x0, double Gamma){
-	double aux1 = (1./M_PI)*(Gamma/2.);
-	double aux2 = Gamma*Gamma/4.;
-	double bw = aux1*(1./(aux2+(x-x0)*(x-x0)));
-	return bw;
+double g(double a){
+	double mean= 2000000;
+	double stdDev = 240000;
+	return exp(-0.5*(a-mean)*(a-mean)/(stdDev*stdDev));
 }
 
-void ex6(){
+void ex5_1(){
 
 	TRandom3 randomGenerator(0);
 	
@@ -64,12 +63,9 @@ void ex6(){
 		
 		if((s13>boundlow)&&(s13<boundup)){
 			
-			// --- PARAMETROS PARA BREITWIGNER DE K*(892)
-			double x0K = 891760;
-			double GammaK = 50300;
-			//-------------------------------------------
 			double test = randomGenerator.Rndm();
-			double point = breitwigner(s13,x0K,GammaK)/breitwigner(x0K,x0K,GammaK);
+			
+			double point = g(s12);
 			
 			if(point>test){
 				hist->Fill(s12,s13);
