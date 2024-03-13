@@ -3,7 +3,8 @@
 #include<TCanvas.h>
 #include<TRandom3.h>
 #include<math.h>
-#include <stdbool.h>
+#include<stdbool.h>
+#include<TComplex.h>
 
 const double massK = 493.667;
 const double massPi = 105.65836;
@@ -24,12 +25,10 @@ double s13_bound(double m1, double m2, double m3, double m0, double s12, double 
 	return m1*m1 + m3*m3 -(1./(2.*s12))*brkt;
 
 }
+Double_t denominador(double m0, double s, double Gamma){
+	Double_t aux = (m0*m0-s)*(m0*m0-s)-(m0*Gamma)*(m0*Gamma);
+	return aux;
 
-double breitwigner(double x, double x0, double Gamma){
-	double aux1 = (1./M_PI)*(Gamma/2.);
-	double aux2 = Gamma*Gamma/4.;
-	double bw = aux1*(1./(aux2+(x-x0)*(x-x0)));
-	return bw;
 }
 
 void ex7(){
@@ -40,7 +39,8 @@ void ex7(){
 	double m1, m2, m3, m0;
 	int i=0;
 	double s12, s13;
-	
+	Double_t maxPDF;
+	Double_t test;
 	
 	
 	//----ATRIBUIÇÃO DAS MASSAS 
@@ -53,8 +53,49 @@ void ex7(){
 	
 	
 	TH2F *hist = new TH2F("hist", "hist", 1000, s12_min, s12_max, 1000, s13_min, s13_max);
-
 	
+	TComplex *bwpdf = new TComplex(0,0);
+	
+	Double_t rePhi, imPhi, reK, imK;
+	
+	// --- PARAMETROS PARA BREITWIGNER DE K*(892) DE S13
+	double m0K = 891.760;
+	double GammaK = 50.300;
+	//-------------------------------------------
+				
+	// --- PARAMETROS PARA BREITWIGNER PHI DE S12
+	double m0Phi = 1019.461;
+	double GammaPhi = 4.249;
+	//-------------------------------------------
+	
+	while(i<10000){
+		
+		s12 = s12_min+(s12_max-s12_min)*randomGenerator.Rndm();
+		s13 = s13_min+(s13_max-s13_min)*randomGenerator.Rndm();
+		
+		double boundup 	= s13_bound(m1,m2,m3,m0,s12,1.0);
+		double boundlow = s13_bound(m1,m2,m3,m0,s12,-1.0);
+		
+		
+		if((s13>boundlow)&&(s13<boundup)){
+		
+			rePhi	= (m0Phi*m0Phi-s12)/denominador(m0Phi, s12, GammaPhi);
+			imPhi	= (m0*GammaPhi)/denominador(m0Phi, s12, GammaPhi);
+			
+			reK	= (m0K*m0K-s13)/denominador(m0K, s13, GammaK);
+			imK	= (m0K*GammaK)/denominador(m0K, s13, GammaK);
+			
+			TComplex *p = new TComplex(0,0);
+			*p = TComplex(reK+rePhi,imPhi+imK);
+			
+			if(i==0){	maxPDF=p->Rho();}
+			else if(p->Rho()>maxPDF){	maxPDF = p->Rho();}
+			i++;
+		}
+	}
+	
+	cout<<" o maximo achado foi de: "<< maxPDF << endl<<"iniciando monte carlo"<<endl;
+	i=0;
 	while(i<100000){
 		
 		s12 = s12_min+(s12_max-s12_min)*randomGenerator.Rndm();
@@ -62,43 +103,31 @@ void ex7(){
 		
 		double boundup 	= s13_bound(m1,m2,m3,m0,s12,1.0);
 		double boundlow = s13_bound(m1,m2,m3,m0,s12,-1.0);
-		bool mcs12, mcs13;
-		mcs12 = false;		
-		mcs13 = false;
-
+		
+		
 		if((s13>boundlow)&&(s13<boundup)){
+		
+			rePhi	= (m0Phi*m0Phi-s12)/denominador(m0Phi, s12, GammaPhi);
+			imPhi	= (m0*GammaPhi)/denominador(m0Phi, s12, GammaPhi);
 			
-			// --- PARAMETROS PARA BREITWIGNER DE K*(892) DE S13
-			double x0 = 891760;
-			double Gamma = 50300;
-			//-------------------------------------------
-			double test = randomGenerator.Rndm();
-			double point = breitwigner(s13,x0,Gamma)/breitwigner(x0,x0,Gamma);
-
-			if(point>test)
-				mcs13 = true;
-				
-			// --- PARAMETROS PARA BREITWIGNER PHI DE S12
-			x0 = 1019461;
-			Gamma = 4249;
-			//-------------------------------------------
+			reK	= (m0K*m0K-s13)/denominador(m0K, s13, GammaK);
+			imK	= (m0K*GammaK)/denominador(m0K, s13, GammaK);
+			
+			TComplex *p = new TComplex(0,0);
+			*p = TComplex(reK+rePhi,imPhi+imK);
+			
 			test = randomGenerator.Rndm();
-			point = breitwigner(s12,x0,Gamma)/breitwigner(x0,x0,Gamma);
-
-			if(point>test)
-				mcs12 = true;
-				
+			if(test < (p->Rho()/maxPDF)){
 			
-			
-			if(mcs12 && mcs13){
 				hist->Fill(s12,s13);
 				i++;
 				cout<< "PONTO ADICIONADO: "<< i <<endl;
-			
 			}
 		}
-	}	
+	}
+		
 	
 	TCanvas *c1 = new TCanvas();
 	hist->Draw();
+	
 }
