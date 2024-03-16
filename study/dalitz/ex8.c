@@ -31,7 +31,16 @@ Double_t denominador(double m0, double s, double Gamma){
 
 }
 
-void ex7(){
+double coss(double m1, double m2, double m3, double m0, double s12, double s13){
+
+	double s = m0*m0;
+	double lbds = lambdasqrt(s12, m2*m2, m1*m1)*lambdasqrt(s,s12,m3*m3);
+	double aux1 = (s12-s+m3*m3)*(s12+m1*m1-m2*m2);
+	double aux2 = (s13-m1*m1-m3*m3)*2*s12;
+	return (aux1+aux2)/(lbds);
+
+}
+void ex8(){
 
 	TRandom3 randomGenerator(0);
 	
@@ -52,7 +61,7 @@ void ex7(){
 	s13_min=(m1+m3)*(m1+m3);	s13_max=(m0-m2)*(m0-m2);
 	
 	
-	TH2F *hist = new TH2F("hist", "hist", 1000, s12_min, s12_max, 1000, s13_min, s13_max);
+	TH2F *hist = new TH2F("hist", "hist", 250, s12_min, s12_max, 250, s13_min, s13_max);
 	
 	TComplex *bwpdf = new TComplex(0,0);
 	
@@ -68,13 +77,15 @@ void ex7(){
 	double GammaPhi = 4.249;
 	//-------------------------------------------
 	
-	while(i<100000){
+	while(i<1000000){
 		
 		s12 = s12_min+(s12_max-s12_min)*randomGenerator.Rndm();
 		s13 = s13_min+(s13_max-s13_min)*randomGenerator.Rndm();
 		
 		double boundup 	= s13_bound(m1,m2,m3,m0,s12,1.0);
 		double boundlow = s13_bound(m1,m2,m3,m0,s12,-1.0);
+		
+		double angulardist = coss(m1,m2,m3,m0,s12,s13);
 		
 		
 		if((s13>boundlow)&&(s13<boundup)){
@@ -86,7 +97,7 @@ void ex7(){
 			imK	= (m0K*GammaK)/denominador(m0K, s13, GammaK);
 			
 			TComplex *p = new TComplex(0,0);
-			*p = TComplex(reK+rePhi,imPhi+imK);
+			*p = TComplex(angulardist*(reK+rePhi),angulardist*(imPhi+imK));
 			
 			if(i==0){	maxPDF=p->Rho();}
 			else if(p->Rho()>maxPDF){	maxPDF = p->Rho();}
@@ -104,8 +115,11 @@ void ex7(){
 		double boundup 	= s13_bound(m1,m2,m3,m0,s12,1.0);
 		double boundlow = s13_bound(m1,m2,m3,m0,s12,-1.0);
 		
-		
+		double angulardist = coss(m1,m2,m3,m0,s12,s13);
+				
 		if((s13>boundlow)&&(s13<boundup)){
+		
+			double angulardist = coss(m1,m2,m3,m0,s12,s13);
 		
 			rePhi	= (m0Phi*m0Phi-s12)/denominador(m0Phi, s12, GammaPhi);
 			imPhi	= (m0*GammaPhi)/denominador(m0Phi, s12, GammaPhi);
@@ -114,7 +128,7 @@ void ex7(){
 			imK	= (m0K*GammaK)/denominador(m0K, s13, GammaK);
 			
 			TComplex *p = new TComplex(0,0);
-			*p = TComplex(reK+rePhi,imPhi+imK);
+			*p = TComplex(angulardist*(reK+rePhi),angulardist*(imPhi+imK));
 			
 			test = randomGenerator.Rndm();
 			if(test < (p->Rho()/maxPDF)){
