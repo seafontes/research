@@ -40,7 +40,7 @@ double coss(double m1, double m2, double m3, double m0, double s12, double s13){
 	return (aux1+aux2)/(lbds);
 
 }
-void ex8(){
+void ex9(){
 
 	TRandom3 randomGenerator(0);
 	
@@ -76,8 +76,12 @@ void ex8(){
 	double m0Phi = 1019.461;
 	double GammaPhi = 4.249;
 	//-------------------------------------------
+	double a_Phi =1;
+	double delta_phi = M_PI*0.5;
+	TComplex *phase = new TComplex(1,delta_phi,true);
 	
-	while(i<1000000){
+	
+	while(i<100000){
 		
 		s12 = s12_min+(s12_max-s12_min)*randomGenerator.Rndm();
 		s13 = s13_min+(s13_max-s13_min)*randomGenerator.Rndm();
@@ -96,18 +100,20 @@ void ex8(){
 			reK	= (m0K*m0K-s13)/denominador(m0K, s13, GammaK);
 			imK	= (m0K*GammaK)/denominador(m0K, s13, GammaK);
 			
-			TComplex *p = new TComplex(0,0);
-			*p = TComplex(angulardist*(reK+rePhi),angulardist*(imPhi+imK));
+			TComplex *A_Phi = new TComplex(rePhi,imPhi);
+			TComplex *A_K = new TComplex(reK,imK);
+			*A_Phi = a_Phi*(*phase)*(*A_Phi);
 			
-			if(i==0){	maxPDF=p->Rho2();}
-			else if(p->Rho2()>maxPDF){	maxPDF = p->Rho2();}
+			
+			if(i==0){	maxPDF=(*A_Phi+*A_K).Rho();}
+			else if((*A_Phi+*A_K).Rho()>maxPDF){	maxPDF = (*A_Phi+*A_K).Rho();}
 			i++;
 		}
 	}
 	
 	cout<<" o maximo achado foi de: "<< maxPDF << endl<<"iniciando monte carlo"<<endl;
 	i=0;
-	while(i<200000){
+	while(i<2000000){
 		
 		s12 = s12_min+(s12_max-s12_min)*randomGenerator.Rndm();
 		s13 = s13_min+(s13_max-s13_min)*randomGenerator.Rndm();
@@ -127,15 +133,15 @@ void ex8(){
 			reK	= (m0K*m0K-s13)/denominador(m0K, s13, GammaK);
 			imK	= (m0K*GammaK)/denominador(m0K, s13, GammaK);
 			
-			TComplex *p = new TComplex(0,0);
-			*p = TComplex(angulardist*(reK+rePhi),angulardist*(imPhi+imK));
+			TComplex *A_Phi = new TComplex(rePhi,imPhi);
+			TComplex *A_K = new TComplex(reK,imK);
+			*A_Phi = a_Phi*(*phase)*(*A_Phi);
 			
 			test = randomGenerator.Rndm();
-			if(test < (p->Rho2()/maxPDF)){
+			if(test < ((*A_Phi+*A_K).Rho()/maxPDF)){
 			
 				hist->Fill(s12,s13);
 				i++;
-				cout<<i<<endl;
 			}
 		}
 	}
