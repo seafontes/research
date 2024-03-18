@@ -81,7 +81,7 @@ void ex9(){
 	TComplex *phase = new TComplex(1,delta_phi,true);
 	
 	
-	while(i<100000){
+	while(i<1000){
 		
 		s12 = s12_min+(s12_max-s12_min)*randomGenerator.Rndm();
 		s13 = s13_min+(s13_max-s13_min)*randomGenerator.Rndm();
@@ -113,7 +113,7 @@ void ex9(){
 	
 	cout<<" o maximo achado foi de: "<< maxPDF << endl<<"iniciando monte carlo"<<endl;
 	i=0;
-	while(i<500000){
+	while(i<5000){
 		
 		s12 = s12_min+(s12_max-s12_min)*randomGenerator.Rndm();
 		s13 = s13_min+(s13_max-s13_min)*randomGenerator.Rndm();

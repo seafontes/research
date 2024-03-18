@@ -13,9 +13,4 @@ void test(){
 	TComplex *a = new TComplex(1,M_PI/2.,true);
 	cout << (*b+*a).Rho2();
 
-
-
-
-
-
 }
