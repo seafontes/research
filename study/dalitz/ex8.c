@@ -77,7 +77,7 @@ void ex8(){
 	double GammaPhi = 4.249;
 	//-------------------------------------------
 	
-	while(i<1000000){
+	while(i<100000){
 		
 		s12 = s12_min+(s12_max-s12_min)*randomGenerator.Rndm();
 		s13 = s13_min+(s13_max-s13_min)*randomGenerator.Rndm();
@@ -85,19 +85,20 @@ void ex8(){
 		double boundup 	= s13_bound(m1,m2,m3,m0,s12,1.0);
 		double boundlow = s13_bound(m1,m2,m3,m0,s12,-1.0);
 		
-		double angulardist = coss(m1,m2,m3,m0,s12,s13);
+		double angs12 = coss(m1,m2,m3,m0,s12,s13);
+ 		double angs13 = coss(m2,m3,m1,m0,s13,s12);
 		
 		
 		if((s13>boundlow)&&(s13<boundup)){
 		
-			rePhi	= (m0Phi*m0Phi-s12)/denominador(m0Phi, s12, GammaPhi);
-			imPhi	= (m0*GammaPhi)/denominador(m0Phi, s12, GammaPhi);
+			rePhi	= angs12*(m0Phi*m0Phi-s12)/denominador(m0Phi, s12, GammaPhi);
+			imPhi	= angs12*(m0*GammaPhi)/denominador(m0Phi, s12, GammaPhi);
 			
-			reK	= (m0K*m0K-s13)/denominador(m0K, s13, GammaK);
-			imK	= (m0K*GammaK)/denominador(m0K, s13, GammaK);
+			reK	= angs13*(m0K*m0K-s13)/denominador(m0K, s13, GammaK);
+			imK	= angs13*(m0K*GammaK)/denominador(m0K, s13, GammaK);
 			
 			TComplex *p = new TComplex(0,0);
-			*p = TComplex(angulardist*(reK+rePhi),angulardist*(imPhi+imK));
+			*p = TComplex(reK+rePhi,imPhi+imK);
 			
 			if(i==0){	maxPDF=p->Rho2();}
 			else if(p->Rho2()>maxPDF){	maxPDF = p->Rho2();}
@@ -107,7 +108,7 @@ void ex8(){
 	
 	cout<<" o maximo achado foi de: "<< maxPDF << endl<<"iniciando monte carlo"<<endl;
 	i=0;
-	while(i<500000){
+	while(i<2000000){
 		
 		s12 = s12_min+(s12_max-s12_min)*randomGenerator.Rndm();
 		s13 = s13_min+(s13_max-s13_min)*randomGenerator.Rndm();
@@ -115,27 +116,27 @@ void ex8(){
 		double boundup 	= s13_bound(m1,m2,m3,m0,s12,1.0);
 		double boundlow = s13_bound(m1,m2,m3,m0,s12,-1.0);
 		
-		double angulardist = coss(m1,m2,m3,m0,s12,s13);
+		
 				
 		if((s13>boundlow)&&(s13<boundup)){
 		
-			double angulardist = coss(m1,m2,m3,m0,s12,s13);
+			double angs12 = coss(m1,m2,m3,m0,s12,s13);
+ 			double angs13 = coss(m2,m3,m1,m0,s13,s12);
 		
-			rePhi	= (m0Phi*m0Phi-s12)/denominador(m0Phi, s12, GammaPhi);
-			imPhi	= (m0*GammaPhi)/denominador(m0Phi, s12, GammaPhi);
+			rePhi	= angs12*(m0Phi*m0Phi-s12)/denominador(m0Phi, s12, GammaPhi);
+			imPhi	= angs12*(m0*GammaPhi)/denominador(m0Phi, s12, GammaPhi);
 			
-			reK	= (m0K*m0K-s13)/denominador(m0K, s13, GammaK);
-			imK	= (m0K*GammaK)/denominador(m0K, s13, GammaK);
+			reK	= angs13*(m0K*m0K-s13)/denominador(m0K, s13, GammaK);
+			imK	= angs13*(m0K*GammaK)/denominador(m0K, s13, GammaK);
 			
 			TComplex *p = new TComplex(0,0);
-			*p = TComplex(angulardist*(reK+rePhi),angulardist*(imPhi+imK));
+			*p = TComplex(reK+rePhi,imPhi+imK);
 			
 			test = randomGenerator.Rndm();
 			if(test < (p->Rho2()/maxPDF)){
 			
 				hist->Fill(s12,s13);
 				i++;
-				cout<<i<<endl;
 			}
 		}
 	}
