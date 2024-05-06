@@ -12,10 +12,10 @@ void fit2G(){
 
 	TFile *kpipi = new TFile("DKPP_1M_2016.root");
         TTree *tree = (TTree*)kpipi->Get("DecayTree");
-	RooRealVar D_M("D_M", "D_M",1800,1950);
+	RooRealVar D_M("D_M", "D_M",1805,1935);
 	RooDataSet data("data", "dataset from tree", RooArgSet(D_M), RooFit::Import(*tree));
 	
-	RooRealVar mean("mean", "Mean of Gaussian", 1870., 1850., 1900.);
+	RooRealVar mean("mean", "Mean of Gaussian", 1870., 1805., 1935.);
     	RooRealVar sigma1("sigma", "Width of Gaussian", 3., 1., 15.);
     	RooRealVar sigma2("sigma2", "Widith of Sigma 2", 7., 1., 15.);
     	RooGaussian gauss1("gauss1", "Gaussian Model 1", D_M, mean, sigma1);
