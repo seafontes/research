@@ -1,0 +1,11 @@
+Minuit2Minimizer : Valid minimum - status = 0
+FVAL  = -9056437.47725149058
+Edm   = 0.00191234917296580036
+Nfcn  = 490
+bgpar     = -0.00707487  +/-  0.000110555       (limited)
+mean      = 1869.93      +/-  0.00859864        (limited)
+nbkg      = 71395.2      +/-  435.476   (limited)
+nsig      = 928603       +/-  1022.7    (limited)
+sig1frac          = 0.728768     +/-  0.00725049        (limited)
+sigma     = 6.57931      +/-  0.0258619 (limited)
+sigma2    = 11.9614      +/-  0.102376  (limited)
